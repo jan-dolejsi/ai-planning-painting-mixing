@@ -1,0 +1,27 @@
+{
+  "name": "ai-planning-painting-mixing",
+  "version": "1.0.0",
+  "description": "AI Planning demo",
+  "main": "noded.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jan-dolejsi/ai-planning-painting-mixing.git"
+  },
+  "keywords": [
+    "AI",
+    "Planning"
+  ],
+  "author": "Filip Dolejsi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jan-dolejsi/ai-planning-painting-mixing/issues"
+  },
+  "homepage": "https://github.com/jan-dolejsi/ai-planning-painting-mixing#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nunjucks": "^3.2.0"
+  }
+}
