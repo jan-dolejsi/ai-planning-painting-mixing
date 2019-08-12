@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            google.charts.load('current', {'packages':['gantt']});
+            google.charts.setOnLoadCallback(drawChart);
+            function daysToMilliseconds(days) {
+                return days *24*60*60*1000;
+            }
+            function drawChart(){
+                
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Task ID')
+                data.addColumn('string','Task Name');
+                data.addColumn('date','Start date');
+                data.addColumn('date','End date');
+                data.addColumn('number','Duration');
+                data.addColumn('number','Percent Complete');
+                data.addColumn('string','Dependencies');
+
+                data.addRows([
+                    ['Mix the paint','Mix paint',
+                    new Date(2019, 8, 12, 8, 00), new Date(2019, 8, 12, 8, 40), 40, 20, null],
+                    ['Paint the room','Paint room',
+                    new Date(2019, 8, 12, 8, 40), new Date(2019, 8, 12, 10, 20), 100, 0, null]
+                ]);
+                
+                var options = {
+                    height: 275
+                };
+
+                var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+                chart.draw(data, options);
+            }        
+        </script>
+
+    </head>
+    <body>
+        <div id="chart_div"></div>
+    </body>
+</html>

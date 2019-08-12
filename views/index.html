@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>House paint</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['gantt'] });
+        google.charts.setOnLoadCallback(drawChart);
+        function daysToMilliseconds(days) {
+            return days * 24 * 60 * 60 * 1000;
+        }
+        function drawChart() {
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Task ID')
+            data.addColumn('string', 'Task Name');
+            data.addColumn('date', 'Start date');
+            data.addColumn('date', 'End date');
+            data.addColumn('number', 'Duration');
+            data.addColumn('number', 'Percent Complete');
+            data.addColumn('string', 'Dependencies');
+
+            var planData = {
+                "plan": [
+                    {
+                        "percent": 20,
+                        "action": "mixing",
+                        "duration": 40,
+                        "startdate": new Date(2019, 8, 12, 8, 00),
+                        "enddate": new Date(2019, 8, 12, 8, 40),
+                        "dependencies": null,
+                        "actionId": "mix"
+                    },
+                    {
+                        "percent": 60,
+                        "action": "painting",
+                        "duration": 100,
+                        "startdate": new Date(2019, 8, 12, 8, 40),
+                        "enddate": new Date(2019, 8, 12, 10, 20),
+                        "dependencies": null,
+                        "actionId": "paint"
+                    }
+                ]
+
+            };
+
+            var chartData = planData.plan
+                .map(planStep => [planStep.actionId, planStep.action,
+                    planStep.startdate, planStep.enddate, planStep.duration, planStep.percent, planStep.dependencies]);
+
+            data.addRows(chartData);
+
+            var options = {
+                height: 275
+            };
+
+            var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }        
+    </script>
+</head>
+
+<body>
+    <p>Hello {{ username }}</p>
+    <p>How much rooms do you have {{ username }}?</p>
+    <form action="/da">
+        Rooms:<br>
+        <input type="text" name="rooms" value="3"><br>
+
+        <p>How many layers of paint?</p>
+        Layers:
+        <input type="text" name="layers" value="6"><br>
+
+        <p>How long does the paint mix for?</p>
+
+        Time (Hrs:mins):<br>
+        <input type="text" name="time_mix" value="1:20"><br>
+
+        <p>How long does it take to paint one room?</p>
+        Time (Hrs:mins):<br>
+        <input type="text" name="time_paint" value="0:30"><br><br>
+
+        Do you have a self cleaning brush?<input type="checkbox" name="self_clean">
+        <p>How many mixers do you have?</p>
+        <input type="text" name="mixers" value="1"><br><br>
+
+        <input type="submit" value="submit">
+    </form>
+    <div id="chart_div"></div>
+</body>
+
+</html>
