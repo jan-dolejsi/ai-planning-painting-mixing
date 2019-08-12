@@ -10,6 +10,29 @@
         function daysToMilliseconds(days) {
             return days * 24 * 60 * 60 * 1000;
         }
+        function addMinutes(dt, minutes) {
+            return new Date(dt.getTime() + minutes*60000);
+        }
+        function toStartTime(jobStarted, planStep) {
+            return addMinutes(jobStarted, planStep.time);
+        }
+        function toEndTime(jobStarted, planStep) {
+            return addMinutes(jobStarted, planStep.time + planStep.duration);
+        }
+        function toPercentDone(jobStarted, planStep) {
+            if (new Date().getTime() < toStartTime(jobStarted, planStep).getTime()) {
+                // the task has not started yet
+                return 0;
+            }
+            else if (new Date().getTime() > toEndTime(jobStarted, planStep).getTime()) {
+                // the task already finished
+                return 100;
+            }
+            else {
+                return (new Date().getMinutes() - toStartTime(jobStarted, planStep).getMinutes()) 
+                    / planStep.duration * 100;
+            }
+        }
         function drawChart() {
 
             var data = new google.visualization.DataTable();
@@ -21,33 +44,39 @@
             data.addColumn('number', 'Percent Complete');
             data.addColumn('string', 'Dependencies');
 
+            var now = new Date();
+
             var planData = {
+                "jobStarted": new Date(2019, 7, 12, 13, 0),
                 "plan": [
                     {
-                        "percent": 20,
+                        "actionId": "mix",
                         "action": "mixing",
+                        "time": 0,
                         "duration": 40,
-                        "startdate": new Date(2019, 8, 12, 8, 00),
-                        "enddate": new Date(2019, 8, 12, 8, 40),
                         "dependencies": null,
-                        "actionId": "mix"
                     },
                     {
-                        "percent": 60,
+                        "actionId": "paint",
                         "action": "painting",
+                        "time": 40,
                         "duration": 100,
-                        "startdate": new Date(2019, 8, 12, 8, 40),
-                        "enddate": new Date(2019, 8, 12, 10, 20),
-                        "dependencies": null,
-                        "actionId": "paint"
+                        "dependencies": 'mix',
                     }
                 ]
 
             };
 
             var chartData = planData.plan
-                .map(planStep => [planStep.actionId, planStep.action,
-                    planStep.startdate, planStep.enddate, planStep.duration, planStep.percent, planStep.dependencies]);
+                .map(planStep => [
+                    planStep.actionId, 
+                    planStep.action,
+                    toStartTime(planData.jobStarted, planStep), 
+                    toEndTime(planData.jobStarted, planStep), 
+                    planStep.duration, 
+                    toPercentDone(planData.jobStarted, planStep), 
+                    planStep.dependencies
+                ]);
 
             data.addRows(chartData);
 
