@@ -1,3 +1,9 @@
 {
-    "username": "You!"
+    "username": "You!",
+    "rooms": 3,
+    "layers": 6,
+    "time_mix": "1:20",
+    "time_paint": "0:30",
+    "self_clean": false,
+    "mixers": 1
 }

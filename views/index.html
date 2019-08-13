@@ -92,27 +92,26 @@
 
 <body>
     <p>Hello {{ username }}</p>
-    <p>How much rooms do you have {{ username }}?</p>
-    <form action="/da">
+    <p>How many rooms do you have, {{ username }}?</p>
+    <form action="/solution">
         Rooms:<br>
-        <input type="text" name="rooms" value="3"><br>
+        <input type="text" name="rooms" value="{{ rooms }}"><br>
 
         <p>How many layers of paint?</p>
         Layers:
-        <input type="text" name="layers" value="6"><br>
+        <input type="text" name="layers" value="{{ layers}}"><br>
 
         <p>How long does the paint mix for?</p>
 
         Time (Hrs:mins):<br>
-        <input type="text" name="time_mix" value="1:20"><br>
+        <input type="text" name="time_mix" value="{{time_mix}}"><br>
 
         <p>How long does it take to paint one room?</p>
         Time (Hrs:mins):<br>
-        <input type="text" name="time_paint" value="0:30"><br><br>
-
-        Do you have a self cleaning brush?<input type="checkbox" name="self_clean">
+        <input type="text" name="time_paint" value="{{time_paint}}"><br><br>
+        Do you have a self cleaning brush?<input type="checkbox" name="self_clean" {% if self_clean %}checked{% endif %}>
         <p>How many mixers do you have?</p>
-        <input type="text" name="mixers" value="1"><br><br>
+        <input type="text" name="mixers" value="{{mixers}}"><br><br>
 
         <input type="submit" value="submit">
     </form>

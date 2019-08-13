@@ -14,4 +14,4 @@ To run the server:
 node noded.js
 ```
 
-Open this address in your browser `http://localhost:3000/da`.
+Open this address in your browser `http://localhost:3000/`.
