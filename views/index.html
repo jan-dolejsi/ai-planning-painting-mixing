@@ -46,36 +46,17 @@
 
             var now = new Date();
 
-            var planData = {
-                "jobStarted": new Date(2019, 7, 12, 13, 0),
-                "plan": [
-                    {
-                        "actionId": "mix",
-                        "action": "mixing",
-                        "time": 0,
-                        "duration": 40,
-                        "dependencies": null,
-                    },
-                    {
-                        "actionId": "paint",
-                        "action": "painting",
-                        "time": 40,
-                        "duration": 100,
-                        "dependencies": 'mix',
-                    }
-                ]
-
-            };
+            var planData = {{solution.plan | dump(2)}};
 
             var chartData = planData.plan
                 .map(planStep => [
-                    planStep.actionId, 
+                    planStep.action, 
                     planStep.action,
                     toStartTime(planData.jobStarted, planStep), 
                     toEndTime(planData.jobStarted, planStep), 
                     planStep.duration, 
                     toPercentDone(planData.jobStarted, planStep), 
-                    planStep.dependencies
+                    ''
                 ]);
 
             data.addRows(chartData);
@@ -88,33 +69,76 @@
             chart.draw(data, options);
         }        
     </script>
+    <style>
+    table {
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+        min-width: 20px;
+    }
+    td {
+        text-align: center;
+    }
+    </style>
 </head>
 
 <body>
-    <p>Hello {{ username }}</p>
-    <p>How many rooms do you have, {{ username }}?</p>
+    <p>Hello {{ inputs.username }}</p>
+    <p>How many rooms do you have, {{ inputs.username }}?</p>
     <form action="/solution">
         Rooms:<br>
-        <input type="text" name="rooms" value="{{ rooms }}"><br>
+        <input type="text" name="rooms" value="{{ inputs.rooms }}"><br>
 
         <p>How many layers of paint?</p>
         Layers:
-        <input type="text" name="layers" value="{{ layers}}"><br>
+        <input type="text" name="layers" value="{{ inputs.layers}}"><br>
 
-        <p>How long does the paint mix for?</p>
+        <p>How long does it take to mix each load of paint per layer?</p>
 
-        Time (Hrs:mins):<br>
-        <input type="text" name="time_mix" value="{{time_mix}}"><br>
+        Times (in minutes) for each layer separated by comma:<br>
+        <input type="text" name="time_mix" value="{{ inputs.time_mix}}"><br>
 
-        <p>How long does it take to paint one room?</p>
-        Time (Hrs:mins):<br>
-        <input type="text" name="time_paint" value="{{time_paint}}"><br><br>
-        Do you have a self cleaning brush?<input type="checkbox" name="self_clean" {% if self_clean %}checked{% endif %}>
+        <p>How long does it take to paint each layer? </p>
+        Times (in minutes) for each layer separated by comma<br>
+        <input type="text" name="time_paint" value="{{ inputs.time_paint}}"><br><br>
+
+        <p>Do you have a self cleaning brush?
+        <input type="checkbox" name="self_clean" {% if inputs.self_clean %}checked{% endif %}>
+        </p>
+        
         <p>How many mixers do you have?</p>
-        <input type="text" name="mixers" value="{{mixers}}"><br><br>
+        <input type="text" name="mixers" value="{{ inputs.mixers}}"><br><br>
 
+        <p>When will the job start / or when has it started?</p>
+        ??? todo: need an input box for date/time.
+
+        <p></p>
         <input type="submit" value="submit">
     </form>
+
+    <table>
+        <tr>
+            <th></th>
+            {% for layer in range(0, inputs.layers) %}
+                <th>{{ layer+1 }}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>Mixing time (min)</td>
+            {% for layer in range(0, inputs.layers) %}
+                <td>{{ inputs.time_mix[layer]}}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>Painting time (min)</td>
+            {% for layer in range(0, inputs.layers) %}
+                <td>{{ inputs.time_paint[layer]}}</td>
+            {% endfor %}
+        </tr>
+    </table>
+
     <div id="chart_div"></div>
 </body>
 
