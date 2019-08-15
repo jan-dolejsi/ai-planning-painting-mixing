@@ -1,5 +1,3 @@
-
-
 (define (domain hello)
 
 (:requirements :strips :typing :negative-preconditions)
@@ -39,14 +37,20 @@
             (not (paintready ?r))
             (ready ?m)
         ))
+        (over all (and
+            (not(ready ?m))
+        ))
+        (at end (and
+            (ready ?m))
+        ))
     )
     :effect (and 
         (at start (and 
-        (not (ready ?m))
+            (not (ready ?m))
         ))
         (at end (and 
-        (ready ?m)
-        (paintready ?r)
+            (ready ?m)
+            (paintready ?r)
         ))
     )
 )

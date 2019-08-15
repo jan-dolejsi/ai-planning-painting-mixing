@@ -1,6 +1,4 @@
-
-
-(define (problem hello-world)
+(define (problem Problem)
 
 (:domain hello)
 
@@ -20,9 +18,9 @@
 
 (:goal
     (and
-
-        (painted room1)
-        (painted room2)
+        (paintready room1)
+        ; (painted room1)
+        ; (painted room2)
     )
 )
 )
