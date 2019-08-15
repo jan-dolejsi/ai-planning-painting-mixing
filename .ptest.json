@@ -1,0 +1,14 @@
+{
+    "defaultDomain": "mixing_paintingDomain.pddl",
+    "defaultProblem": "mixing_paintingProblem.pddl",
+    "defaultOptions": "",
+    "cases": [
+        {
+            "label": "template",
+            "preProcess": {
+                "kind": "nunjucks",
+                "data": "data.json"
+            }
+        }
+    ]
+}

@@ -11,6 +11,9 @@
     (ready ?m - mixer)
 )
 
+(:functions
+    (time_mix ?l - layer)
+)
 
 (:action paint
     :parameters (?r - room)
@@ -29,8 +32,8 @@
 
 )
 (:durative-action mix
-    :parameters (?r - room ?m - mixer)
-    :duration (= ?duration 1)
+    :parameters (?r - room ?m - mixer ?l - layer)
+    :duration (= ?duration (time_mix ?l))
     :condition (and 
         (at start (and 
             (available ?r)
