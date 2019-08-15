@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <link rel="stylesheet" href="style.css">
     <title>House paint</title>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
@@ -46,7 +47,27 @@
 
             var now = new Date();
 
-            var planData = {{solution.plan | dump(2)}};
+            var planData = {
+                "jobStarted": new Date(2019, 7, 12, 13, 0),
+                "plan": {{solution.plan | dump('\t') | safe}}
+            };
+            // var planData = {
+            //     "jobStarted": new Date(2019, 7, 12, 13, 0),
+            //     "plan": [
+            //         {
+            //             "action": "mixing",
+            //             "time": 0,
+            //             "duration": 40,
+            //             "dependencies": null,
+            //         },
+            //         {
+            //             "action": "painting",
+            //             "time": 40,
+            //             "duration": 100,
+            //             "dependencies": 'mixing',
+            //         }
+            //     ]
+            // };
 
             var chartData = planData.plan
                 .map(planStep => [
@@ -56,7 +77,7 @@
                     toEndTime(planData.jobStarted, planStep), 
                     planStep.duration, 
                     toPercentDone(planData.jobStarted, planStep), 
-                    ''
+                    planStep.dependencies
                 ]);
 
             data.addRows(chartData);
@@ -85,37 +106,37 @@
 </head>
 
 <body>
-    <p>Hello {{ inputs.username }}</p>
+    <h3><u>Hello {{ inputs.username }}</u></h3>
     <p>How many rooms do you have, {{ inputs.username }}?</p>
     <form action="/solution">
-        Rooms:<br>
+        <p>
         <input type="text" name="rooms" value="{{ inputs.rooms }}"><br>
-
+        </p>
         <p>How many layers of paint?</p>
-        Layers:
-        <input type="text" name="layers" value="{{ inputs.layers}}"><br>
+        <p>
+        <p><input type="text" name="layers" value="{{ inputs.layers}}"></p><br>
 
         <p>How long does it take to mix each load of paint per layer?</p>
 
-        Times (in minutes) for each layer separated by comma:<br>
-        <input type="text" name="time_mix" value="{{ inputs.time_mix}}"><br>
+        <p>Times (in minutes) for each layer separated by comma:</p>
+        <p><input type="text" name="time_mix" value="{{ inputs.time_mix}}"></p><br>
 
-        <p>How long does it take to paint each layer? </p>
-        Times (in minutes) for each layer separated by comma<br>
-        <input type="text" name="time_paint" value="{{ inputs.time_paint}}"><br><br>
+        <p>How long does it take to paint each layer?</p>
+
+        <p>Times (in minutes) for each layer separated by comma</p>
+        <p><input type="text" name="time_paint" value="{{ inputs.time_paint}}"></p><br>
 
         <p>Do you have a self cleaning brush?
         <input type="checkbox" name="self_clean" {% if inputs.self_clean %}checked{% endif %}>
         </p>
         
         <p>How many mixers do you have?</p>
-        <input type="text" name="mixers" value="{{ inputs.mixers}}"><br><br>
+        <p><input type="text" name="mixers" value="{{ inputs.mixers}}"></p>
 
         <p>When will the job start / or when has it started?</p>
-        ??? todo: need an input box for date/time.
+        <p><input type="datetime-local" name="datestart"></p>
 
-        <p></p>
-        <input type="submit" value="submit">
+        <p><input type="submit" value="submit"></p><br>
     </form>
 
     <table>

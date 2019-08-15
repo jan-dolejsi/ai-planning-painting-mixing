@@ -13,8 +13,10 @@ app.set('view engine', 'html');
 app.get('/', function(req, res) {
     const filecontent = fs.readFileSync('data.json')
     const data=JSON.parse(filecontent);
-    res.render('index.html', data);
+    res.render('index.html', { inputs: data, solution: {plan: []} });
 });
+
+app.use(express.static('views'));
 
 app.get('/solution', function(req, res) {
     var formInputs = {
@@ -24,7 +26,7 @@ app.get('/solution', function(req, res) {
         "time_mix": splitCommaSeparatedValues(req.query.time_mix),
         "time_paint": splitCommaSeparatedValues(req.query.time_paint),
         "self_clean": req.query.self_clean,
-        "mixers": req.query.mixers,
+        "mixers": req.query.mixers, 
         "jobStarted": new Date()
     };
 
