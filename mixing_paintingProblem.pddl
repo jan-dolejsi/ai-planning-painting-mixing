@@ -15,13 +15,25 @@
     mixer{{l}} - mixer
     {%endfor%}
 
+    ; todo: replace by a nunjucks for loop
     layer1 - layer
+    layer2 - layer
+    layer3 - layer
+    layer4 - layer
+    layer5 - layer
+    layer6 - layer
+
+    ; todo: replace by a loop from data.json
+    john - mixer
 )
 
 (:init
 
+    ; todo: replace by a loop from data.json
     (available room1)
     (available room2)
+
+    ; todo: replace by a loop from data.json
     (ready john)
     {% for rhyme in data.time_mix %}
     (= (time_mix layer{{loop.index}}) {{rhyme}})
@@ -31,9 +43,10 @@
 
 (:goal
     (and
-        (paintready room1)
-        ; (painted room1)
-        ; (painted room2)
+
+        ; todo: generate goals from data.json
+        (painted room1)
+        (painted room2)
     )
 )
 )

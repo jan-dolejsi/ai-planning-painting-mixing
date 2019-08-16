@@ -30,6 +30,13 @@ app.get('/solution', function(req, res) {
         "jobStarted": new Date()
     };
 
+    // todo: instead of reading the plan from the plan.json static file, 
+    // generate the real problem.pddl file using nunjucks.render(...) and call the solver
+    // hints: 
+    // https://mozilla.github.io/nunjucks/api.html#render
+    // https://www.thepolyglotdeveloper.com/2017/10/consume-remote-api-data-nodejs-application/
+    // http://solver.planning.domains/
+
     const planFileContent = fs.readFileSync('plan.json')
     const plan=JSON.parse(planFileContent);
 
