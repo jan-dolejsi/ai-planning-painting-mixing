@@ -18,12 +18,13 @@
         (ready john)
 
         (= (time_mix layer1) 3)
+        (= (time_paint layer1) 2)
     )
 
     (:goal
         (and
-            (painted room1)
-            (painted room2)
+            (painted room1 layer1)
+            (painted room2 layer1)
         )
     )
 )
