@@ -13,20 +13,32 @@
 
 (:functions
     (time_mix ?l - layer)
+    (time_paint ?l - layer)
 )
 
 ; todo: turn this into a durative-action with a proper duration
-(:action paint
-    :parameters (?r - room)
-    :precondition (and
-
-        (not (painted ?r))
-
-        (paintready ?r)
+(:durative-action paint
+    :parameters (?r - room ?m - mixer ?l - layer)
+    :duration (= ?duration (time_paint ?l))
+    :condition (and
+        (at start(and
+            (available ?r)
+            (not (painted ?r))
+            (ready ?m)
+            (paintready ?r)
+        ))
     )
     :effect (and
-
+        (at start (and
+        (not(ready ?m))
+        (not(available ?r))
+        ))
+        (at end (and
+        (ready ?m)
         (painted ?r)
+        (available ?r)
+        ))
+
     )
 )
 
@@ -44,10 +56,12 @@
     :effect (and 
         (at start (and 
             (not (ready ?m))
+            (not(available ?r))
         ))
         (at end (and 
             (ready ?m)
             (paintready ?r)
+            (available ?r)
         ))
     )
 )
