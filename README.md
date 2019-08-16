@@ -11,7 +11,7 @@ npm install
 To run the server:
 
 ```bash
-node noded.js
+node app.js
 ```
 
 Open this address in your browser `http://localhost:3000/`.

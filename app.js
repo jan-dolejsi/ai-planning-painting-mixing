@@ -48,7 +48,7 @@ app.get('/solution', async function (req, res) {
     res.render('index.html', { inputs: formInputs, solution: plan });
 });
 
-app.get('/d', (req, res) => res.send('Hello World!'))
+app.get('/about', (req, res) => res.send('Hello World!'))
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
@@ -58,7 +58,7 @@ async function callPlanner(inputs) {
 
     const generatedPlanSteps = await new Promise((resolve, reject) => {
         request.post({
-            url: "http://localhost:8087/solve",
+            url: "http://localhost:8087/solve?enableSteepestAscent=true",
             body: requestBody, json: true, timeout: 60000
         },
             (error, httpResponse, responseBody) => {
