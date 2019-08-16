@@ -1,6 +1,6 @@
 (define (domain hello)
 
-(:requirements :strips :typing :negative-preconditions)
+(:requirements :strips :typing :negative-preconditions :fluents :durative-actions)
 
 (:types room layer mixer)
 
@@ -15,6 +15,7 @@
     (time_mix ?l - layer)
 )
 
+; todo: turn this into a durative-action with a proper duration
 (:action paint
     :parameters (?r - room)
     :precondition (and
@@ -30,7 +31,6 @@
 )
 
 
-)
 (:durative-action mix
     :parameters (?r - room ?m - mixer ?l - layer)
     :duration (= ?duration (time_mix ?l))
@@ -39,12 +39,6 @@
             (available ?r)
             (not (paintready ?r))
             (ready ?m)
-        ))
-        (over all (and
-            (not(ready ?m))
-        ))
-        (at end (and
-            (ready ?m))
         ))
     )
     :effect (and 
@@ -57,5 +51,4 @@
         ))
     )
 )
-
 )
