@@ -34,8 +34,24 @@ app.get('/solution', function(req, res) {
     // generate the real problem.pddl file using nunjucks.render(...) and call the solver
     // hints: 
     // https://mozilla.github.io/nunjucks/api.html#render
-    // https://www.thepolyglotdeveloper.com/2017/10/consume-remote-api-data-nodejs-application/
-    // http://solver.planning.domains/
+
+    var Request = require("request");
+    let requestBody = {
+        "domain": fs.readFileSync('mixing_paintingDomain.pddl').toString('utf8'),
+        "problem": fs.readFileSync('problem_two_rooms.pddl').toString('utf8')
+    };
+
+    Request.post({ url: "http://solver.planning.domains/solve", 
+        body: requestBody, json: true, timeout:60000 }, 
+        (error, httpResponse, responseBody) => {
+        if(error) {
+            return console.dir(error);
+        }
+        if (httpResponse.statusCode > 220) {
+            console.log('Status code: ' + httpResponse.statusCode);
+        }
+        console.log(JSON.parse(responseBody));
+    });
 
     const planFileContent = fs.readFileSync('plan.json')
     const plan=JSON.parse(planFileContent);

@@ -1,9 +1,9 @@
 {
     "username": "ohio",
-    "rooms": 3,
-    "layers": 6,
-    "time_mix": [3, 2.5, 2, 2, 1.5, 1],
-    "time_paint": [2, 2, 2, 2, 2, 2],
+    "rooms": 2,
+    "layers": 4,
+    "time_mix": [3, 2.5, 2, 2],
+    "time_paint": [2, 2, 2, 2],
     "self_clean": false,
     "mixers": 2
 }

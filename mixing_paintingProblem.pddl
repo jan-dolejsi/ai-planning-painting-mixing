@@ -48,9 +48,10 @@
 (:goal
     (and
 
-        ; todo: generate goals from data.json
-    {% for r in range(1, data.rooms+1) %}
-    (painted room{{r}})
+    {% for r in range(1, data.rooms+1) %}   
+        {% for l in range(1, data.layers+1) %} 
+            (painted room{{r}} layer{{l}})
+        {%endfor%}
     {%endfor%}
     )
 )
