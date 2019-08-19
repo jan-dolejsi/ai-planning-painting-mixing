@@ -1,0 +1,11 @@
+{
+    "case": "2r_1l_1m_disposable",
+    "problem": "case_2r_2l_1m_disposable",
+    "rooms": 2,
+    "layers": 2,
+    "time_mix": [3, 2],
+    "time_paint": [2, 2],
+    "disposable_brush": true,
+    "time_clean": 10,
+    "mixers": 1
+}

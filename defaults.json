@@ -1,9 +1,11 @@
 {
-    "username": "ohio",
+    "case": "Case #1",
+    "problem": "Case__1",
     "rooms": 2,
     "layers": 4,
     "time_mix": [3, 2.5, 2, 2],
     "time_paint": [2, 2, 2, 2],
-    "self_clean": false,
+    "disposable_brush": true,
+    "time_clean": 10,
     "mixers": 2
 }

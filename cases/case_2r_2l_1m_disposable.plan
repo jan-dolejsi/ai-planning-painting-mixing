@@ -1,0 +1,18 @@
+;;!domain: painting
+;;!problem: case_2r_2l_1m_disposable
+
+0.00100: (mix room1 mixer1 layer1) [3.00000]
+3.00200: (mix room2 mixer1 layer1) [3.00000]
+3.00200: (paint room1 layer1) [2.00000]
+5.00300: (_next_layer layer1 layer2 room1)
+6.00300: (mix room1 mixer1 layer2) [2.00000]
+8.00400: (paint room1 layer2) [2.00000]
+10.00500: (_dispose_brush room1 room2)
+10.00600: (paint room2 layer1) [2.00000]
+12.00700: (_next_layer layer1 layer2 room2)
+12.00800: (mix room2 mixer1 layer2) [2.00000]
+14.00900: (paint room2 layer2) [2.00000]
+
+; Makespan: 16.009
+; Cost: 16.009
+; States evaluated: 33

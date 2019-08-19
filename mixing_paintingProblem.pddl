@@ -1,48 +1,56 @@
-;;!pre-parsing:{type: "nunjucks", data: "data.json"}
+;;!pre-parsing:{type: "nunjucks", data: "defaults.json"}
 
 ; hints: https://mozilla.github.io/nunjucks/templating.html
 
-(define (problem {{data.username}})
+(define (problem {{data.problem}})
 
-(:domain hello)
+(:domain painting)
 
 (:objects
 
     {% for r in range(1, data.rooms+1) %}
     room{{r}} - room
     {%endfor%}
+
     {% for l in range(1, data.mixers+1) %}
     mixer{{l}} - mixer
     {%endfor%}
 
-    ; todo: replace by a nunjucks for loop
     {% for e in range(1, data.layers+1) %}
     layer{{e}} - layer
     {%endfor%}
-
-    ; ; todo: replace by a loop from data.json
-    ; john - mixer
 )
 
 (:init
 
-    ; todo: replace by a loop from data.json
     {% for r in range(1, data.rooms+1) %}
     (available room{{r}})
-    {%endfor%}
+    {% if data.layers %}    (current layer1 room{{r}}) {% endif %}
+    {% endfor %}
 
-    ; todo: replace by a loop from data.json
+    {% if data.rooms %}    (painters_in room1) {% endif %}
+
+    {% for l in range(2, data.layers+1)%}
+    (next_layer layer{{l-1}} layer{{l}})
+    {% endfor %}
+
     {% for k in range(1, data.mixers+1) %}
     (ready mixer{{k}})
     {%endfor%}
 
-    {% for rhyme in data.time_mix %}
-    (= (time_mix layer{{loop.index}}) {{rhyme}})
-    {%endfor%}
-    {% for ji in data.time_paint %}
-    (= (time_paint layer{{loop.index}}) {{ji}})
+    {% for layer in data.time_mix %}
+    (= (time_mix layer{{loop.index}}) {{layer}})
     {%endfor%}
 
+    {% for layer in data.time_paint %}
+    (= (time_paint layer{{loop.index}}) {{layer}})
+    {%endfor%}
+
+    (= (time_clean) {{data.time_clean}})
+
+    {% if data.disposable_brush %}
+    (disposable_brush)    
+    {% endif %}
 )
 
 (:goal

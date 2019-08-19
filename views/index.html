@@ -5,40 +5,16 @@
     <link rel="stylesheet" href="style.css">
     <title>House paint</title>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="chart.js"></script>
     <script type="text/javascript">
         google.charts.load('current', { 'packages': ['gantt'] });
         google.charts.setOnLoadCallback(drawChart);
-        function daysToMilliseconds(days) {
-            return days * 24 * 60 * 60 * 1000;
-        }
-        function addMinutes(dt, minutes) {
-            return new Date(dt.getTime() + minutes*60000);
-        }
-        function toStartTime(jobStarted, planStep) {
-            return addMinutes(jobStarted, planStep.time);
-        }
-        function toEndTime(jobStarted, planStep) {
-            return addMinutes(jobStarted, planStep.time + planStep.duration);
-        }
-        function toPercentDone(jobStarted, planStep) {
-            if (new Date().getTime() < toStartTime(jobStarted, planStep).getTime()) {
-                // the task has not started yet
-                return 0;
-            }
-            else if (new Date().getTime() > toEndTime(jobStarted, planStep).getTime()) {
-                // the task already finished
-                return 100;
-            }
-            else {
-                return (new Date().getMinutes() - toStartTime(jobStarted, planStep).getMinutes()) 
-                    / planStep.duration * 100;
-            }
-        }
         function drawChart() {
 
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Task ID')
             data.addColumn('string', 'Task Name');
+            data.addColumn('string', 'Resource'); // determines the color of the bars
             data.addColumn('date', 'Start date');
             data.addColumn('date', 'End date');
             data.addColumn('number', 'Duration');
@@ -48,31 +24,15 @@
             var now = new Date();
 
             var planData = {
-                "jobStarted": new Date(2019, 7, 12, 13, 0),
+                "jobStarted": new Date("{{inputs.jobStart}}"),
                 "plan": {{solution.plan | dump('\t') | safe}}
             };
-            // var planData = {
-            //     "jobStarted": new Date(2019, 7, 12, 13, 0),
-            //     "plan": [
-            //         {
-            //             "action": "mixing",
-            //             "time": 0,
-            //             "duration": 40,
-            //             "dependencies": null,
-            //         },
-            //         {
-            //             "action": "painting",
-            //             "time": 40,
-            //             "duration": 100,
-            //             "dependencies": 'mixing',
-            //         }
-            //     ]
-            // };
 
             var chartData = planData.plan
                 .map(planStep => [
                     planStep.action, 
                     planStep.action,
+                    planStep.action.substring(0, planStep.action.indexOf(' ')),
                     toStartTime(planData.jobStarted, planStep), 
                     toEndTime(planData.jobStarted, planStep), 
                     planStep.duration, 
@@ -90,54 +50,51 @@
             chart.draw(data, options);
         }        
     </script>
-    <style>
-    table {
-        border-collapse: collapse;
-    }
-
-    table, th, td {
-        border: 1px solid black;
-        min-width: 20px;
-    }
-    td {
-        text-align: center;
-    }
-    </style>
 </head>
 
 <body>
-    <h3><u>Hello {{ inputs.username }}</u></h3>
-    <p>How many rooms do you have, {{ inputs.username }}?</p>
+    <h3><u>Paint mixing and room painting planner</u></h3>
     <form action="/solution">
-        <p>
-        <input type="text" name="rooms" value="{{ inputs.rooms }}"><br>
+        <p>Case name or address:<br>
+            <input type="text" name="case" value="{{ inputs.case }}">
         </p>
-        <p>How many layers of paint?</p>
-        <p>
-        <p><input type="text" name="layers" value="{{ inputs.layers}}"></p><br>
-
-        <p>How long does it take to mix each load of paint per layer?</p>
-
-        <p>Times (in minutes) for each layer separated by comma:</p>
-        <p><input type="text" name="time_mix" value="{{ inputs.time_mix}}"></p><br>
-
-        <p>How long does it take to paint each layer?</p>
-
-        <p>Times (in minutes) for each layer separated by comma</p>
-        <p><input type="text" name="time_paint" value="{{ inputs.time_paint}}"></p><br>
-
-        <p>Do you have a self cleaning brush?
-        <input type="checkbox" name="self_clean" {% if inputs.self_clean %}checked{% endif %}>
+        <p>How many rooms do you have?<br>
+            <input type="number" min="1" name="rooms" value="{{ inputs.rooms }}"><br>
         </p>
-        
-        <p>How many mixers do you have?</p>
-        <p><input type="text" name="mixers" value="{{ inputs.mixers}}"></p>
+        <p>How many layers of paint?<br />
+            <input type="number" min="1" name="layers" value="{{ inputs.layers}}">
+        </p>
+        <p>How long does it take to mix each load of paint per layer?<br>
+            Times (in minutes) for each layer separated by comma:<br>
+            <input type="text" name="time_mix" value="{{ inputs.time_mix}}">
+        </p>
+    
+        <p>How long does it take to paint each layer?<br>
+    
+            Times (in minutes) for each layer separated by comma<br>
+            <input type="text" name="time_paint" value="{{ inputs.time_paint}}">
+        </p>
+    
+        <p>Will you use disposable brashes? <br>If not, switching between rooms will take longer because of cleaning.<br>
+            <input type="checkbox" name="disposable_brush" {% if inputs.disposable_brush %}checked{% endif %}>
+        </p>
 
-        <p>When will the job start / or when has it started?</p>
-        <p><input type="datetime-local" name="datestart"></p>
+        <p>If you use non-disposable brush, how long does it take ot clean it (in minutes)?<br>
+            <input type="number" name="time_clean" value="{{inputs.time_clean}}">
+        </p>
 
+        <p>How many paint mixers do you have?<br>
+            <input type="number" min="1" name="mixers" value="{{ inputs.mixers}}">
+        </p>
+    
+        <p>When will the job start / or when has it started?<br>
+            <input type="datetime-local" name="jobStart" value="{{ inputs.jobStart}}">
+        </p>
+    
         <p><input type="submit" value="submit"></p><br>
     </form>
+
+    <div id="chart_div"></div>
 
     <table>
         <tr>
@@ -159,8 +116,6 @@
             {% endfor %}
         </tr>
     </table>
-
-    <div id="chart_div"></div>
 </body>
 
 </html>

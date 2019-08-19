@@ -1,56 +1,60 @@
-const express = require('express')
-const nunjucks = require('nunjucks')
-const app = express()
-const port = 3000
-var fs = require('fs');
-var request = require("request");
+const express = require('express');
+const nunjucks = require('nunjucks');
+const fs = require('fs');
+const request = require("request");
 
+const app = express(); 
+const port = 3000; // default port
+
+// configure where nunjucks looks for templates
 nunjucks.configure('views', {
     autoescape: true,
     express: app
 });
+
 app.set('view engine', 'html');
 
 app.get('/', function (req, res) {
-    const filecontent = fs.readFileSync('data.json')
-    const data = JSON.parse(filecontent);
-    res.render('index.html', { inputs: data, solution: { plan: [] } });
+    const defaults = fs.readFileSync('defaults.json');
+    const defaultsJson = JSON.parse(defaults);
+    var timeZoneOffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+    defaultsJson["jobStart"] = new Date(Date.now() - timeZoneOffset).toISOString().slice(0, -1)
+    res.render('index.html', { inputs: defaultsJson, solution: { plan: [] } });
 });
 
-app.use(express.static('views'));
+app.use(express.static('views')); // this is how express serves the 'style.css'
 
 app.get('/solution', async function (req, res) {
     var formInputs = {
-        "username": "from_ui",
+        "case": req.query.case,
+        "problem": req.query.case.replace(/[^\w-]/g, '_'), // sanitize user input
         "rooms": parseInt(req.query.rooms),
         "layers": parseInt(req.query.layers),
         "time_mix": splitCommaSeparatedValues(req.query.time_mix),
         "time_paint": splitCommaSeparatedValues(req.query.time_paint),
-        "self_clean": req.query.self_clean,
+        "disposable_brush": req.query.disposable_brush,
+        "time_clean": parseFloat(req.query.time_clean),
         "mixers": parseInt(req.query.mixers),
-        "jobStarted": new Date()
+        "jobStart": req.query.jobStart
     };
 
     let planSteps = [];
     try {
         planSteps = await callPlanner(formInputs);
+        // const planFileContent = fs.readFileSync('plan.json')
+        // const plan = JSON.parse(planFileContent);
+        const plan = { "plan": planSteps };
+
+        res.render('index.html', { inputs: formInputs, solution: plan });
     }
     catch (err) {
         console.log(err);
-        res.write(err);
+        res.send(err.message || err);
         res.end();
     }
-
-    // const planFileContent = fs.readFileSync('plan.json')
-    // const plan = JSON.parse(planFileContent);
-    const plan = { "plan": planSteps };
-
-    res.render('index.html', { inputs: formInputs, solution: plan });
 });
 
-app.get('/about', (req, res) => res.send('Hello World!'))
-
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Planning app listening on port ${port}!`))
 
 async function callPlanner(inputs) {
 
@@ -108,7 +112,7 @@ function createRequest(inputs) {
 /**
  * Splits the text by comma, trims, parses and returns as a list of numbers.
  * @param {string} valuesCsv comma separated
- * @returns {mumber[]} list of values
+ * @returns {number[]} list of values
  */
 function splitCommaSeparatedValues(valuesCsv) {
     return valuesCsv.split(',')

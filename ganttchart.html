@@ -12,6 +12,7 @@
                 var data = new google.visualization.DataTable();
                 data.addColumn('string', 'Task ID')
                 data.addColumn('string','Task Name');
+                data.addColumn('string', 'Resource'); // determines the color of the bars
                 data.addColumn('date','Start date');
                 data.addColumn('date','End date');
                 data.addColumn('number','Duration');
@@ -19,9 +20,9 @@
                 data.addColumn('string','Dependencies');
 
                 data.addRows([
-                    ['Mix the paint','Mix paint',
+                    ['mix','Mix paint', 'mix',
                     new Date(2019, 8, 12, 8, 00), new Date(2019, 8, 12, 8, 40), 40, 20, null],
-                    ['Paint the room','Paint room',
+                    ['paint','Paint room', 'paint',
                     new Date(2019, 8, 12, 8, 40), new Date(2019, 8, 12, 10, 20), 100, 0, null]
                 ]);
                 

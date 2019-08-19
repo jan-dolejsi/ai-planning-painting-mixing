@@ -7,3 +7,13 @@ body{
 h3{
     text-underline-position: above
 }
+table {
+    border-collapse: collapse;
+}
+table, th, td {
+    border: 1px solid black;
+    min-width: 20px;
+}
+td {
+    text-align: center;
+}

@@ -1,0 +1,8 @@
+;;!domain: painting
+;;!problem: case_1r_1l_1m_disposable
+
+0.00100: (mix room1 mixer1 layer1) [3.00000]
+3.00200: (paint room1 layer1) [2.00000]
+
+; Makespan: 5.002
+; Cost: 5.002

@@ -1,14 +1,69 @@
 {
     "defaultDomain": "mixing_paintingDomain.pddl",
     "defaultProblem": "mixing_paintingProblem.pddl",
-    "defaultOptions": "",
+    "defaultOptionsService": "enableSteepestAscent=true&stateMemory=StateDomination",
+    "defaultOptions": "--enable-steepest-ascent --state-memory=StateDomination",
     "cases": [
         {
-            "label": "template",
+            "label": "Defaults",
             "preProcess": {
                 "kind": "nunjucks",
-                "data": "data.json"
+                "data": "defaults.json"
             }
+        },
+        {
+            "label": "Last case ran from the UI",
+            "problem": "mixing_paintingProblem_rendered.pddl"
+        },
+        {
+            "label": "1 room, 1 layer, 1 mixer, disposable",
+            "preProcess": {
+                "kind": "nunjucks",
+                "data": "cases/case_1r_1l_1m_disposable.json"
+            },
+            "expectedPlans": [
+                "cases/case_1r_1l_1m_disposable.plan"
+            ]
+        },
+        {
+            "label": "1 room, 2 layers, 1 mixer, disposable",
+            "preProcess": {
+                "kind": "nunjucks",
+                "data": "cases/case_1r_2l_1m_disposable.json"
+            },
+            "expectedPlans": [
+                "cases/case_1r_2l_1m_disposable.plan"
+            ]
+        },
+        {
+            "label": "1 room, 2 layers, 1 mixer, non-disposable",
+            "preProcess": {
+                "kind": "nunjucks",
+                "data": "cases/case_1r_2l_1m_non-disposable.json"
+            },
+            "expectedPlans": [
+                "cases/case_1r_2l_1m_non-disposable.plan"
+            ]
+        },
+        {
+            "label": "2 rooms, 2 layers, 1 mixer, disposable",
+            "preProcess": {
+                "kind": "nunjucks",
+                "data": "cases/case_2r_2l_1m_disposable.json"
+            },
+            "expectedPlans": [
+                "cases/case_2r_2l_1m_disposable.plan"
+            ]
+        },
+        {
+            "label": "2 rooms, 2 layers, 1 mixer, non-disposable",
+            "preProcess": {
+                "kind": "nunjucks",
+                "data": "cases/case_2r_2l_1m_non-disposable.json"
+            },
+            "expectedPlans": [
+                "cases/case_2r_2l_1m_non-disposable.plan"
+            ]
         }
     ]
 }
