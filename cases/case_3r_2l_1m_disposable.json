@@ -1,7 +1,7 @@
 {
-    "case": "2r_2l_1m_disposable",
-    "problem": "case_2r_2l_1m_disposable",
-    "rooms": 2,
+    "case": "3r_2l_1m_disposable",
+    "problem": "case_3r_2l_1m_disposable",
+    "rooms": 3,
     "layers": 2,
     "time_mix": [3, 2],
     "time_paint": [2, 2],

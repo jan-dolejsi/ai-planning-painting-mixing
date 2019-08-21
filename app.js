@@ -15,7 +15,8 @@ nunjucks.configure('views', {
 app.set('view engine', 'html');
 
 app.get('/', function (req, res) {
-    const defaults = fs.readFileSync('defaults.json');
+    const caseName = req.query.case || 'defaults.json';
+    const defaults = fs.readFileSync(caseName);
     const defaultsJson = JSON.parse(defaults);
     var timeZoneOffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
     defaultsJson["jobStart"] = new Date(Date.now() - timeZoneOffset).toISOString().slice(0, -1)
@@ -62,25 +63,29 @@ async function callPlanner(inputs) {
 
     const generatedPlanSteps = await new Promise((resolve, reject) => {
         request.post({
-            url: "http://localhost:8087/solve?enableSteepestAscent=true",
+            url: "http://localhost:8087/solve?enableSteepestAscent=true&enableEarliestApplicability=true&stateMemory=StateDomination&",
             body: requestBody, json: true, timeout: 60000
         },
             (error, httpResponse, responseBody) => {
                 if (error) {
                     console.dir(error);
                     reject(error);
+                    return;
                 }
                 if (httpResponse.statusCode > 220) {
                     console.log('Status code: ' + httpResponse.statusCode);
                     reject('Status code: ' + httpResponse.statusCode);
+                    return;
                 }
                 if (responseBody["status"] !== "ok") {
                     console.log(responseBody["result"]["error"]);
                     reject(responseBody["result"]["error"]);
+                    return;
                 }
                 else {
                     const planSteps = responseBody["result"]["plan"];
                     resolve(planSteps);
+                    return;
                 }
             });
     });

@@ -30,6 +30,13 @@
 
     {% if data.rooms %}    (painters_in room1) {% endif %}
 
+    ; room sequence (circular)
+    {% for r in range(2, data.rooms+1)%}
+    (next_room room{{r-1}} room{{r}})
+    {% endfor %}
+    {% if data.rooms %}    (next_room room{{data.rooms}} room1){% endif %}
+
+    ; layer sequence
     {% for l in range(2, data.layers+1)%}
     (next_layer layer{{l-1}} layer{{l}})
     {% endfor %}

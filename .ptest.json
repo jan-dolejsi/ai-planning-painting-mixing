@@ -1,8 +1,8 @@
 {
     "defaultDomain": "mixing_paintingDomain.pddl",
     "defaultProblem": "mixing_paintingProblem.pddl",
-    "defaultOptionsService": "enableSteepestAscent=true&stateMemory=StateDomination",
-    "defaultOptions": "--enable-steepest-ascent --state-memory=StateDomination",
+    "defaultOptionsService": "enableSteepestAscent=true&enableEarliestApplicability=true&stateMemory=StateDomination",
+    "defaultOptions": "--enable-steepest-ascent --state-memory=StateDomination --enable-earliest-applicability",
     "cases": [
         {
             "label": "Defaults",
@@ -64,6 +64,20 @@
             "expectedPlans": [
                 "cases/case_2r_2l_1m_non-disposable.plan"
             ]
+        },
+        {
+            "label": "3 rooms, 2 layers, 1 mixer, disposable",
+            "preProcess": {
+                "kind": "nunjucks",
+                "data": "cases/case_3r_2l_1m_disposable.json"
+            }
+        },
+        {
+            "label": "3 rooms, 20 layers, 1 mixer, disposable",
+            "preProcess": {
+                "kind": "nunjucks",
+                "data": "cases/case_3r_20l_1m_disposable.json"
+            }
         }
     ]
 }

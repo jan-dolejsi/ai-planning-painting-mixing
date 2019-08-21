@@ -8,6 +8,7 @@
     (paintready ?r - room ?l - layer) ; paint is ready for the room `?r` and layer `?l`
     (paintwaiting ?r - room) ; paint is waiting in the room `?r` and therefore further mixing cannot start
     (available ?r - room) ; room `?r` is available for mixing or painting 
+    (next_room ?r1 ?r2 - room) ; circular sequence of rooms
     (painted ?r - room ?l - layer) ; this is the goal: the room should have the layer painted
     (ready ?m - mixer) ; paint mixer `?m` is available for mixing
     (painting) ; Keeps track of the state of the painter
@@ -17,6 +18,7 @@
     ; Layers must be painted in the order 1..M
     (current ?l - layer ?r - room) ; current layer to be mixed/painted
     (next_layer ?l1 ?l2 - layer) ; sequence of layers
+    (transitioned ?r1 ?r2 - room ?l - layer)
 )
 
 (:functions
@@ -84,13 +86,19 @@
 
 ; Clean the (non-disposable) brush as the painters move from `?r1` to `?r2`.
 (:durative-action clean
-    :parameters (?r1 ?r2 - room)
+    :parameters (?r1 ?r2 - room ?l - layer)
     :duration (= ?duration (time_clean))
     :condition (and 
         (at start (and 
-            (painters_in ?r1)
             ; only consider this when the brush is not disposable
             (not (disposable_brush))
+            (painters_in ?r1)
+            (not (painting))
+            ; only consider this when the room/layer has been painted
+            (painted ?r1 ?l)
+            (next_room ?r1 ?r2)
+            ; make this action single-shot
+            (not (transitioned ?r1 ?r2 ?l))
         ))
         (over all (and
             (not (painting))
@@ -99,6 +107,7 @@
     :effect (and 
         (at start (and 
             (not (painters_in ?r1))
+            (transitioned ?r1 ?r2 ?l)
         ))
         (at end (and 
             (painters_in ?r2)
@@ -109,15 +118,20 @@
 
 ; Disposes the brush and gets a clean one, while switching between rooms
 (:action _dispose_brush
-    :parameters (?r1 ?r2 - room)
+    :parameters (?r1 ?r2 - room ?l - layer)
     :precondition (and 
-        (not (painting))
-        (painters_in ?r1)
         (disposable_brush)
+        (painters_in ?r1)
+        (not (painting))
+        (painted ?r1 ?l)
+        (next_room ?r1 ?r2)
+        ; make this action single-shot
+        (not (transitioned ?r1 ?r2 ?l))
     )
     :effect (and 
         (not (painters_in ?r1))
         (painters_in ?r2)
+        (transitioned ?r1 ?r2 ?l)
     )
 )
 
